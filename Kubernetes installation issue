@@ -1,0 +1,20 @@
+The problem is that some ubuntu (and others) distro come with the google cloud SDK installed through the local package manager, but it doesn't contain everything. kubectl for example is missing as seen with this command:
+gcloud components list
+when you try to add the needed component for Kubernetes with:
+gcloud components install kubectl
+you end up with this error:
+ERROR: (gcloud.components.update) The component manager is disabled for this installation
+It is a known issue on the Google Cloud SDK issue tracker : Issue 336: kubectl not installed by google-cloud-sdk debian package, and not installable
+Unfortunately, it provides a poor experience for first timer testing kubernetes as it's hard to find a quick AND CLEAN step by step solution.
+Here is one:
+sudo apt-get update
+sudo apt-get remove google-cloud-sdk
+curl https://sdk.cloud.google.com | bash
+exec -l $SHELL
+gcloud init
+gcloud components list
+gcloud components install kubectl
+gcloud components list
+this last command should show kubectl installed and everything up to date.
+
+sudo apt-get update && sudo apt-get remove google-cloud-sdk && curl -sSL https://sdk.cloud.google.com | bash -
